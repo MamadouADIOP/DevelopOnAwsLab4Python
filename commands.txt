@@ -1,0 +1,35 @@
+Update lambda function configuration
+aws lambda update-function-configuration --environment Variables="{MP3_BUCKET_NAME=labstack-39d389cc-6957-4afc-81-pollynotesapibucket-tdpy5ic1vtmd, TABLE_NAME=Notes}"q --function-name dictate-function
+Update function code
+aws lambda update-function-code --function dictate-function --zip-file fileb://dictate_function.zip
+Navigate to dictate-function folder
+cd ~/environment/api/dictate-function
+
+zip app.py file
+zip dictate-function.zip app.py
+Upload the code to the Lambda
+aws lambda update-function-code --function-name dictate-function --zip-file fileb://dictate-function.zip
+
+Update the function handler
+aws lambda update-function-configuration \
+--function-name dictate-function \
+--handler app.lambda_handlerqq
+
+Invoke lambda with payload
+
+aws lambda invoke               --cli-binary-format raw-in-base64-out               --function-name dictate-function              --cli-binary-format raw-in-base64-out               --payload '{ "UserId": "newbie",
+  "NoteId": "2",
+  "VoiceId": "Joey"}'               response.json
+  
+ Parameterize function name
+ 
+
+zip $functionName.zip app.py
+&&
+  aws lambda create-function --function-name $functionName --runtime python3.11  --zip-file fileb://$functionName.zip  --handler app.lambda_handler --role arn:aws:iam::419611292086:role/lambdaPollyRole
+  
+  &&
+  
+  aws lambda update-function-configuration --environment Variables="{MP3_BUCKET_NAME=labstack-39d389cc-6957-4afc-81-pollynotesapibucket-tdpy5ic1vtmd, TABLE_NAME=Notes}" --function-name $functionName
+  &&
+  aws lambda invoke --function $functionName  --cli-binary-format raw-in-base64-out  --payload fileb://event.json response.json   && cat response.json
