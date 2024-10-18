@@ -33,3 +33,7 @@ zip $functionName.zip app.py
   aws lambda update-function-configuration --environment Variables="{MP3_BUCKET_NAME=labstack-39d389cc-6957-4afc-81-pollynotesapibucket-tdpy5ic1vtmd, TABLE_NAME=Notes}" --function-name $functionName
   &&
   aws lambda invoke --function $functionName  --cli-binary-format raw-in-base64-out  --payload fileb://event.json response.json   && cat response.json
+  
+  Get Polly role arn
+  
+  roleArn=$(aws iam list-roles --output text --query 'Roles[?contains(RoleName, `lambdaPollyRole`) == `true`].Arn')
