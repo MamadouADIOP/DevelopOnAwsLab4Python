@@ -48,7 +48,7 @@ def getNote(dynamoDBResource, ddbTable, UserId, NoteId):
         }
     )
 # TODO 1: Get the note text from the pollynotes DynamoDB table that matches the UserId and NoteId
-
+    return records["Item"]["Note"]
     # End TODO 1
 
 
@@ -56,7 +56,7 @@ def createMP3File(pollyClient, text, VoiceId, NoteId):
     print("createMP3File Function")
     # TODO 2: Use polly to convert the note text to speech using the VoiceId
     # and save the file as an MP3 in the /tmp folder
-
+    pollyResponse=pollyClient.synthesize_speech(Text=text, Engine="neural", VoiceId=VoiceId, OutputFormat="mp3")
     # End TODO 2
     if "AudioStream" in pollyResponse:
         postId = str(NoteId)
@@ -71,7 +71,7 @@ def createMP3File(pollyClient, text, VoiceId, NoteId):
 def hostFileOnS3(s3Client, filePath, mp3Bucket, UserId, NoteId):
     print("hostFileOnS3 Function")
     # TODO 3: Upload the mp3 file to S3 mp3Bucket and generate a pre-signed URL to access the MP3 object
-
+    s3Client.upload_file(filePath, mp3Bucket,  UserId+'/'+NoteId+'.mp3')
     # End TODO 3
 
     # Remove the file from the temp location to avoid potential data leaks
